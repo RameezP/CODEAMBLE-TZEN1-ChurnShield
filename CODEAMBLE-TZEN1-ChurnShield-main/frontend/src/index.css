@@ -1,0 +1,476 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import "tailwindcss";
+
+/* ─── Base ─── */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #f5f3ff;
+  color: #111827;
+  margin: 0;
+}
+
+/* ─── CSS Custom Properties ─── */
+:root {
+  --primary: #4F46E5;
+  --primary-dark: #3730A3;
+  --primary-light: #EEF2FF;
+  --primary-mid: #6366F1;
+  --bg: #f5f3ff;
+  --bg-alt: #ede9fe;
+  --card: #ffffff;
+  --border: #E5E7EB;
+  --border-light: #F3F4F6;
+  --text: #111827;
+  --text-secondary: #6B7280;
+  --text-muted: #9CA3AF;
+  --risk-critical: #EF4444;
+  --risk-high: #F97316;
+  --risk-medium: #8B5CF6;
+  --risk-low: #10B981;
+  --shadow-sm: 0 1px 3px 0 rgba(0,0,0,0.08), 0 1px 2px -1px rgba(0,0,0,0.06);
+  --shadow: 0 4px 16px -2px rgba(79,70,229,0.08), 0 2px 6px -2px rgba(0,0,0,0.05);
+  --shadow-md: 0 8px 24px -4px rgba(79,70,229,0.12), 0 4px 8px -2px rgba(0,0,0,0.06);
+  --shadow-lg: 0 20px 40px -8px rgba(79,70,229,0.18), 0 8px 16px -4px rgba(0,0,0,0.08);
+}
+
+/* ─── Page Background ─── */
+.cs-bg {
+  background: linear-gradient(145deg, #f5f3ff 0%, #ede9fe 35%, #f5f3ff 70%, #eef2ff 100%);
+  min-height: 100vh;
+}
+
+/* ─── Decorative Orbs ─── */
+.cs-orb {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(80px);
+  opacity: 0.5;
+}
+.cs-orb-1 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(139,92,246,0.25) 0%, transparent 70%);
+  top: -150px; right: -100px;
+}
+.cs-orb-2 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(99,102,241,0.2) 0%, transparent 70%);
+  bottom: 100px; left: -100px;
+}
+.cs-orb-3 {
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(167,139,250,0.15) 0%, transparent 70%);
+  top: 40%; left: 50%;
+  transform: translateX(-50%);
+}
+
+/* ─── Cards ─── */
+.cs-card {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+}
+.cs-card:hover { box-shadow: var(--shadow-md); }
+.cs-card-hover:hover {
+  border-color: rgba(99,102,241,0.35);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ─── Inputs ─── */
+.cs-input {
+  background: #ffffff;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 13px;
+  padding: 10px 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+}
+.cs-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
+}
+.cs-input::placeholder { color: var(--text-muted); }
+.cs-select {
+  background: #ffffff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236B7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E") no-repeat right 10px center / 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 13px;
+  padding: 10px 32px 10px 14px;
+  appearance: none;
+  font-family: 'Inter', sans-serif;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.cs-select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99,102,241,0.12); }
+
+/* ─── Buttons ─── */
+.cs-btn-primary {
+  background: var(--primary);
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Inter', sans-serif;
+  box-shadow: 0 2px 8px rgba(99,102,241,0.25);
+}
+.cs-btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99,102,241,0.35);
+}
+.cs-btn-primary:active { transform: translateY(0); }
+.cs-btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+.cs-btn-secondary {
+  background: #ffffff;
+  color: var(--text);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-weight: 500;
+  font-size: 13px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Inter', sans-serif;
+}
+.cs-btn-secondary:hover { background: #F9FAFB; border-color: #D1D5DB; }
+
+.cs-btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-size: 13px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+.cs-btn-ghost:hover { background: rgba(99,102,241,0.06); color: var(--primary); }
+
+/* ─── Industry Card Enter Button ─── */
+.cs-industry-btn {
+  background: #1A1A2E;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+}
+.cs-industry-btn:hover { background: #111827; }
+
+/* ─── Tags / Chips ─── */
+.cs-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid;
+  white-space: nowrap;
+}
+.cs-tag-indigo { background: #EEF2FF; color: #4F46E5; border-color: #C7D2FE; }
+.cs-tag-orange { background: #FFF7ED; color: #EA580C; border-color: #FED7AA; }
+.cs-tag-purple { background: #F5F3FF; color: #7C3AED; border-color: #DDD6FE; }
+.cs-tag-green  { background: #F0FDF4; color: #16A34A; border-color: #BBF7D0; }
+.cs-tag-red    { background: #FEF2F2; color: #DC2626; border-color: #FECACA; }
+
+/* ─── Risk Badges ─── */
+.badge-critical { background: #FEF2F2; color: #DC2626; border: 1px solid #FECACA; font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 20px; white-space: nowrap; }
+.badge-high     { background: #FFF7ED; color: #C2410C; border: 1px solid #FED7AA; font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 20px; white-space: nowrap; }
+.badge-medium   { background: #F5F3FF; color: #6D28D9; border: 1px solid #DDD6FE; font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 20px; white-space: nowrap; }
+.badge-low      { background: #F0FDF4; color: #15803D; border: 1px solid #BBF7D0; font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 20px; white-space: nowrap; }
+.badge-shap-risk { background: #FEF2F2; color: #DC2626; border: 1px solid #FECACA; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; }
+.badge-shap-protect { background: #F0FDF4; color: #15803D; border: 1px solid #BBF7D0; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; }
+
+/* ─── Navbar ─── */
+.cs-nav {
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(229,231,235,0.8);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  height: 60px;
+  gap: 8px;
+}
+.cs-nav-link {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 8px;
+  transition: color 0.2s, background 0.2s;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  background: transparent;
+  font-family: 'Inter', sans-serif;
+}
+.cs-nav-link:hover { color: var(--text); background: rgba(99,102,241,0.05); }
+.cs-nav-link.active {
+  color: var(--primary);
+  font-weight: 600;
+  border-bottom: 2px solid var(--primary);
+  border-radius: 0;
+}
+.cs-ai-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1.5px solid #C7D2FE;
+  background: #EEF2FF;
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ─── Landing Hero Stat Cards ─── */
+.cs-stat-float {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 18px;
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(8px);
+}
+
+/* ─── Feature Icon Box ─── */
+.cs-icon-box {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  background: #EEF2FF;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+.cs-icon-box-sm {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  background: #EEF2FF;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+/* ─── SHAP Bar ─── */
+.shap-track {
+  height: 20px;
+  background: #F9FAFB;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border-light);
+}
+.shap-bar-risk {
+  position: absolute;
+  inset-y: 2px;
+  left: 50%;
+  background: linear-gradient(90deg, #EF4444, #DC2626);
+  border-radius: 0 4px 4px 0;
+  transition: width 0.5s ease;
+}
+.shap-bar-protect {
+  position: absolute;
+  inset-y: 2px;
+  right: 50%;
+  background: linear-gradient(270deg, #10B981, #059669);
+  border-radius: 4px 0 0 4px;
+  transition: width 0.5s ease;
+}
+.shap-axis {
+  position: absolute;
+  inset-y: 0;
+  left: 50%;
+  width: 1.5px;
+  background: rgba(107,114,128,0.3);
+  z-index: 2;
+}
+
+/* ─── Churn Progress Bar ─── */
+.churn-meter-track {
+  height: 10px;
+  background: #F3F4F6;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.churn-meter-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ─── Table ─── */
+.cs-table { width: 100%; border-collapse: collapse; }
+.cs-table th {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  padding: 10px 16px;
+  text-align: left;
+  background: #F9FAFB;
+  border-bottom: 1px solid var(--border-light);
+}
+.cs-table td {
+  padding: 12px 16px;
+  font-size: 13px;
+  color: var(--text);
+  border-bottom: 1px solid var(--border-light);
+  vertical-align: middle;
+}
+.cs-table tr:hover td { background: rgba(99,102,241,0.025); }
+.cs-table tr:last-child td { border-bottom: none; }
+
+/* ─── Donut ─── */
+.recharts-pie-sector path { filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+
+/* ─── File Dropzone ─── */
+.cs-dropzone {
+  border: 2px dashed #D1D5DB;
+  border-radius: 12px;
+  padding: 32px 24px;
+  text-align: center;
+  background: #FAFAFE;
+  transition: border-color 0.2s, background 0.2s;
+  cursor: pointer;
+}
+.cs-dropzone:hover { border-color: var(--primary); background: #EEF2FF; }
+
+/* ─── Animations ─── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(1.3); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.cs-fade-up { animation: fadeUp 0.45s ease forwards; }
+.cs-fade-up-d1 { animation: fadeUp 0.45s 0.1s ease both; }
+.cs-fade-up-d2 { animation: fadeUp 0.45s 0.2s ease both; }
+.cs-fade-up-d3 { animation: fadeUp 0.45s 0.3s ease both; }
+.animate-pulse-dot { animation: pulse-dot 1.8s ease-in-out infinite; }
+.spin-slow { animation: shimmer 2s linear infinite; }
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.25); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(99,102,241,0.5); }
+
+/* ─── Utilities ─── */
+/* ─── Utilities & Responsive Classes ─── */
+.text-primary { color: var(--primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-muted { color: var(--text-muted); }
+.bg-primary { background: var(--primary); }
+.truncate { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Responsive Container Grid Utilities */
+.cs-grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 40px; }
+.cs-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.cs-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+.cs-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+.cs-responsive-split { display: grid; grid-template-columns: 1fr 420px; gap: 24px; }
+
+/* ─── Responsive Breakpoints & Device Emulation Rules ─── */
+@media (max-width: 1100px) {
+  .cs-grid-5 { grid-template-columns: repeat(3, 1fr) !important; gap: 24px !important; }
+  .cs-grid-4 { grid-template-columns: repeat(2, 1fr) !important; }
+  .cs-responsive-split { grid-template-columns: 1fr !important; }
+  .cs-stat-float { display: none !important; }
+}
+
+@media (max-width: 900px) {
+  .cs-grid-3 { grid-template-columns: repeat(2, 1fr) !important; gap: 18px !important; }
+  .cs-grid-2 { grid-template-columns: 1fr !important; gap: 16px !important; }
+  .cs-hero-title { font-size: 44px !important; }
+  .cs-hero-subtitle { font-size: 20px !important; }
+  .cs-hero-padding { padding: 48px 24px 36px !important; }
+  .cs-cards-padding { padding: 0 24px 48px !important; }
+}
+
+@media (max-width: 640px) {
+  .cs-nav {
+    padding: 0 12px !important;
+    height: auto !important;
+    min-height: 54px !important;
+    flex-wrap: wrap !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    gap: 4px !important;
+  }
+  .cs-nav-link {
+    padding: 5px 10px !important;
+    font-size: 12px !important;
+  }
+  .cs-ai-badge {
+    display: none !important;
+  }
+  .cs-grid-5, .cs-grid-4, .cs-grid-3, .cs-grid-2 {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  .cs-hero-title {
+    font-size: 32px !important;
+    letter-spacing: -1px !important;
+  }
+  .cs-hero-subtitle {
+    font-size: 17px !important;
+  }
+  .cs-table-wrapper {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+  }
+}
+
+@media print {
+  .cs-nav, .no-print { display: none !important; }
+}

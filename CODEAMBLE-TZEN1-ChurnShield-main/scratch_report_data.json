@@ -1,0 +1,876 @@
+{
+  "telecom": {
+    "tested": 100,
+    "unique_summaries": 100,
+    "unique_recs": 32,
+    "avg_similarity": 0.1954,
+    "max_similarity": 0.7637,
+    "same_prob_pairs": [
+      {
+        "c1_id": "8992-JQYUN",
+        "c1_prob": 0.9996,
+        "c1_risk": "CRITICAL",
+        "c1_pos_drivers": [
+          {
+            "feature": "Satisfaction Score",
+            "raw_feature": "Satisfaction Score",
+            "impact": 5.7819,
+            "abs_impact": 5.7819,
+            "direction": "churn",
+            "feature_value": 1
+          },
+          {
+            "feature": "Number of Referrals",
+            "raw_feature": "Number of Referrals",
+            "impact": 0.3849,
+            "abs_impact": 0.3849,
+            "direction": "churn",
+            "feature_value": 1
+          },
+          {
+            "feature": "Contract Month-to-Month",
+            "raw_feature": "Contract_Month-to-Month",
+            "impact": 0.312,
+            "abs_impact": 0.312,
+            "direction": "churn",
+            "feature_value": "Month-to-Month"
+          }
+        ],
+        "c1_summary": "Customer 8992-JQYUN is at CRITICAL risk (100.0% churn probability) driven by rate sensitivity on their $50.35/mo plan and Month-to-Month contract. Targeted billing relief restores value alignment.",
+        "c1_rec": "15% Monthly Discount ($7.55/mo savings) + Free Tech Support",
+        "c2_id": "3068-OMWZA",
+        "c2_prob": 0.9996,
+        "c2_risk": "CRITICAL",
+        "c2_pos_drivers": [
+          {
+            "feature": "Satisfaction Score",
+            "raw_feature": "Satisfaction Score",
+            "impact": 5.9868,
+            "abs_impact": 5.9868,
+            "direction": "churn",
+            "feature_value": 1
+          },
+          {
+            "feature": "Age",
+            "raw_feature": "Age",
+            "impact": 0.4452,
+            "abs_impact": 0.4452,
+            "direction": "churn",
+            "feature_value": 77
+          },
+          {
+            "feature": "Contract Month-to-Month",
+            "raw_feature": "Contract_Month-to-Month",
+            "impact": 0.4245,
+            "abs_impact": 0.4245,
+            "direction": "churn",
+            "feature_value": "Month-to-Month"
+          }
+        ],
+        "c2_summary": "Customer 3068-OMWZA is at CRITICAL risk (100.0% churn probability) driven by rate sensitivity on their $88.8/mo plan and Month-to-Month contract. Targeted billing relief restores value alignment.",
+        "c2_rec": "15% Monthly Discount ($13.32/mo savings) + Free Tech Support",
+        "prob_diff": 0.0
+      },
+      {
+        "c1_id": "3068-OMWZA",
+        "c1_prob": 0.9996,
+        "c1_risk": "CRITICAL",
+        "c1_pos_drivers": [
+          {
+            "feature": "Satisfaction Score",
+            "raw_feature": "Satisfaction Score",
+            "impact": 5.9868,
+            "abs_impact": 5.9868,
+            "direction": "churn",
+            "feature_value": 1
+          },
+          {
+            "feature": "Age",
+            "raw_feature": "Age",
+            "impact": 0.4452,
+            "abs_impact": 0.4452,
+            "direction": "churn",
+            "feature_value": 77
+          },
+          {
+            "feature": "Contract Month-to-Month",
+            "raw_feature": "Contract_Month-to-Month",
+            "impact": 0.4245,
+            "abs_impact": 0.4245,
+            "direction": "churn",
+            "feature_value": "Month-to-Month"
+          }
+        ],
+        "c1_summary": "Customer 3068-OMWZA is at CRITICAL risk (100.0% churn probability) driven by rate sensitivity on their $88.8/mo plan and Month-to-Month contract. Targeted billing relief restores value alignment.",
+        "c1_rec": "15% Monthly Discount ($13.32/mo savings) + Free Tech Support",
+        "c2_id": "3669-OYSJI",
+        "c2_prob": 0.9994,
+        "c2_risk": "CRITICAL",
+        "c2_pos_drivers": [
+          {
+            "feature": "Satisfaction Score",
+            "raw_feature": "Satisfaction Score",
+            "impact": 6.2543,
+            "abs_impact": 6.2543,
+            "direction": "churn",
+            "feature_value": 2
+          },
+          {
+            "feature": "Contract Month-to-Month",
+            "raw_feature": "Contract_Month-to-Month",
+            "impact": 0.3026,
+            "abs_impact": 0.3026,
+            "direction": "churn",
+            "feature_value": "Month-to-Month"
+          },
+          {
+            "feature": "Tenure in Months",
+            "raw_feature": "Tenure in Months",
+            "impact": 0.2699,
+            "abs_impact": 0.2699,
+            "direction": "churn",
+            "feature_value": 1
+          }
+        ],
+        "c2_summary": "Customer 3669-OYSJI is at CRITICAL risk (99.9% churn probability) driven by rate sensitivity on their $46.2/mo plan and Month-to-Month contract. Targeted billing relief restores value alignment.",
+        "c2_rec": "15% Monthly Discount ($6.93/mo savings) + Free Tech Support",
+        "prob_diff": 0.02
+      }
+    ],
+    "tier_samples": {
+      "CRITICAL": {
+        "customer_id": "8992-JQYUN",
+        "churn_probability": 0.9996,
+        "risk_level": "CRITICAL",
+        "top_drivers": [
+          {
+            "feature": "Satisfaction Score",
+            "raw_feature": "Satisfaction Score",
+            "impact": 5.7819,
+            "abs_impact": 5.7819,
+            "direction": "churn",
+            "feature_value": 1
+          },
+          {
+            "feature": "Number of Referrals",
+            "raw_feature": "Number of Referrals",
+            "impact": 0.3849,
+            "abs_impact": 0.3849,
+            "direction": "churn",
+            "feature_value": 1
+          },
+          {
+            "feature": "Contract Month-to-Month",
+            "raw_feature": "Contract_Month-to-Month",
+            "impact": 0.312,
+            "abs_impact": 0.312,
+            "direction": "churn",
+            "feature_value": "Month-to-Month"
+          },
+          {
+            "feature": "Tenure in Months",
+            "raw_feature": "Tenure in Months",
+            "impact": 0.2818,
+            "abs_impact": 0.2818,
+            "direction": "churn",
+            "feature_value": 1
+          }
+        ],
+        "strategy_summary": "Customer 8992-JQYUN is at CRITICAL risk (100.0% churn probability) driven by rate sensitivity on their $50.35/mo plan and Month-to-Month contract. Targeted billing relief restores value alignment.",
+        "recommendation": "15% Monthly Discount ($7.55/mo savings) + Free Tech Support"
+      },
+      "HIGH": {
+        "customer_id": "6204-IEUXJ",
+        "churn_probability": 0.6998,
+        "risk_level": "HIGH",
+        "top_drivers": [
+          {
+            "feature": "Online Security",
+            "raw_feature": "Online Security",
+            "impact": 0.5711,
+            "abs_impact": 0.5711,
+            "direction": "churn",
+            "feature_value": 0
+          },
+          {
+            "feature": "Offer Offer E",
+            "raw_feature": "Offer_Offer E",
+            "impact": 0.5524,
+            "abs_impact": 0.5524,
+            "direction": "churn",
+            "feature_value": "Offer E"
+          },
+          {
+            "feature": "Premium Tech Support",
+            "raw_feature": "Premium Tech Support",
+            "impact": -0.4,
+            "abs_impact": 0.4,
+            "direction": "retention",
+            "feature_value": 1
+          },
+          {
+            "feature": "Contract Month-to-Month",
+            "raw_feature": "Contract_Month-to-Month",
+            "impact": 0.3652,
+            "abs_impact": 0.3652,
+            "direction": "churn",
+            "feature_value": "Month-to-Month"
+          }
+        ],
+        "strategy_summary": "Customer 6204-IEUXJ is at HIGH risk (70.0% churn probability) driven by rate sensitivity on their $80.1/mo plan and Month-to-Month contract. Targeted billing relief restores value alignment.",
+        "recommendation": "15% Monthly Discount ($12.01/mo savings) + Free Tech Support"
+      },
+      "MEDIUM": {
+        "customer_id": "8677-HDZEE",
+        "churn_probability": 0.3931,
+        "risk_level": "MEDIUM",
+        "top_drivers": [
+          {
+            "feature": "Online Security",
+            "raw_feature": "Online Security",
+            "impact": 0.5399,
+            "abs_impact": 0.5399,
+            "direction": "churn",
+            "feature_value": 0
+          },
+          {
+            "feature": "Monthly Charge",
+            "raw_feature": "Monthly Charge",
+            "impact": 0.4604,
+            "abs_impact": 0.4604,
+            "direction": "churn",
+            "feature_value": 105.45
+          },
+          {
+            "feature": "Satisfaction Score",
+            "raw_feature": "Satisfaction Score",
+            "impact": -0.4568,
+            "abs_impact": 0.4568,
+            "direction": "retention",
+            "feature_value": 3
+          },
+          {
+            "feature": "Premium Tech Support",
+            "raw_feature": "Premium Tech Support",
+            "impact": -0.4343,
+            "abs_impact": 0.4343,
+            "direction": "retention",
+            "feature_value": 1
+          }
+        ],
+        "strategy_summary": "Customer 8677-HDZEE maintains a stable account profile (39.3% churn probability, 56 months tenure). Proactive rewards preserve customer satisfaction.",
+        "recommendation": "Subscriber Loyalty Upgrade: Free Speed Boost + 1,000 Reward Points"
+      },
+      "LOW": {
+        "customer_id": "7426-RHZGU",
+        "churn_probability": 0.2919,
+        "risk_level": "LOW",
+        "top_drivers": [
+          {
+            "feature": "Premium Tech Support",
+            "raw_feature": "Premium Tech Support",
+            "impact": -0.6431,
+            "abs_impact": 0.6431,
+            "direction": "retention",
+            "feature_value": 1
+          },
+          {
+            "feature": "Online Security",
+            "raw_feature": "Online Security",
+            "impact": 0.5196,
+            "abs_impact": 0.5196,
+            "direction": "churn",
+            "feature_value": 0
+          },
+          {
+            "feature": "Satisfaction Score",
+            "raw_feature": "Satisfaction Score",
+            "impact": -0.497,
+            "abs_impact": 0.497,
+            "direction": "retention",
+            "feature_value": 3
+          },
+          {
+            "feature": "Total Long Distance Charges",
+            "raw_feature": "Total Long Distance Charges",
+            "impact": -0.4211,
+            "abs_impact": 0.4211,
+            "direction": "retention",
+            "feature_value": 277.2
+          }
+        ],
+        "strategy_summary": "Customer 7426-RHZGU maintains a stable account profile (29.2% churn probability, 9 months tenure). Proactive rewards preserve customer satisfaction.",
+        "recommendation": "Subscriber Loyalty Upgrade: Free Speed Boost + 1,000 Reward Points"
+      }
+    }
+  },
+  "ott": {
+    "tested": 100,
+    "unique_summaries": 100,
+    "unique_recs": 5,
+    "avg_similarity": 0.2826,
+    "max_similarity": 0.8849,
+    "same_prob_pairs": [
+      {
+        "c1_id": "OTT-001296",
+        "c1_prob": 0.9948,
+        "c1_risk": "CRITICAL",
+        "c1_pos_drivers": [
+          {
+            "feature": "Days Since Last Login",
+            "raw_feature": "Days Since Last Login",
+            "impact": 2.4775,
+            "abs_impact": 2.4775,
+            "direction": "churn",
+            "feature_value": 38
+          },
+          {
+            "feature": "Avg Monthly Watch Hours",
+            "raw_feature": "Avg Monthly Watch Hours",
+            "impact": 2.0388,
+            "abs_impact": 2.0388,
+            "direction": "churn",
+            "feature_value": 1.0
+          },
+          {
+            "feature": "Tenure Months",
+            "raw_feature": "Tenure Months",
+            "impact": 0.8128,
+            "abs_impact": 0.8128,
+            "direction": "churn",
+            "feature_value": 10
+          }
+        ],
+        "c1_summary": "Subscriber OTT-001296 shows a CRITICAL churn risk (99.5%) driven primarily by low viewing engagement (1.0 hrs/month) and 38 days since last login. Re-activating content consumption is the top priority.",
+        "c1_rec": "Special Re-engagement: 50% Off 3-Month Upgrade + Curated VIP Watchlist",
+        "c2_id": "OTT-000706",
+        "c2_prob": 0.9838,
+        "c2_risk": "CRITICAL",
+        "c2_pos_drivers": [
+          {
+            "feature": "Support Tickets",
+            "raw_feature": "Support Tickets",
+            "impact": 2.4886,
+            "abs_impact": 2.4886,
+            "direction": "churn",
+            "feature_value": 3
+          },
+          {
+            "feature": "Days Since Last Login",
+            "raw_feature": "Days Since Last Login",
+            "impact": 2.0403,
+            "abs_impact": 2.0403,
+            "direction": "churn",
+            "feature_value": 38
+          },
+          {
+            "feature": "Tenure Months",
+            "raw_feature": "Tenure Months",
+            "impact": 1.0123,
+            "abs_impact": 1.0123,
+            "direction": "churn",
+            "feature_value": 1
+          }
+        ],
+        "c2_summary": "Subscriber OTT-000706 is at CRITICAL risk (98.4%) caused by 3 support tickets and service friction. Immediate resolution is necessary to prevent cancellation.",
+        "c2_rec": "VIP Support Escalation + 1 Month Free Basic Pass",
+        "prob_diff": 1.1
+      },
+      {
+        "c1_id": "OTT-003907",
+        "c1_prob": 0.9476,
+        "c1_risk": "CRITICAL",
+        "c1_pos_drivers": [
+          {
+            "feature": "Days Since Last Login",
+            "raw_feature": "Days Since Last Login",
+            "impact": 2.6035,
+            "abs_impact": 2.6035,
+            "direction": "churn",
+            "feature_value": 38
+          },
+          {
+            "feature": "Tenure Months",
+            "raw_feature": "Tenure Months",
+            "impact": 0.8085,
+            "abs_impact": 0.8085,
+            "direction": "churn",
+            "feature_value": 13
+          },
+          {
+            "feature": "Profile Count",
+            "raw_feature": "Profile Count",
+            "impact": 0.2418,
+            "abs_impact": 0.2418,
+            "direction": "churn",
+            "feature_value": 2
+          }
+        ],
+        "c1_summary": "Subscriber OTT-003907 is flagged at CRITICAL risk (94.8%) due to Days Since Last Login = 38 (+2.60 SHAP impact \u2014 churn risk driver). Transitioning from Basic monthly billing to an annual agreement secures account stability.",
+        "c1_rec": "Exclusive 12-Month Annual Pass Upgrade at 30% Discount",
+        "c2_id": "OTT-000916",
+        "c2_prob": 0.9351,
+        "c2_risk": "CRITICAL",
+        "c2_pos_drivers": [
+          {
+            "feature": "Support Tickets",
+            "raw_feature": "Support Tickets",
+            "impact": 1.179,
+            "abs_impact": 1.179,
+            "direction": "churn",
+            "feature_value": 2
+          },
+          {
+            "feature": "Days Since Last Login",
+            "raw_feature": "Days Since Last Login",
+            "impact": 0.9822,
+            "abs_impact": 0.9822,
+            "direction": "churn",
+            "feature_value": 24
+          },
+          {
+            "feature": "Avg Monthly Watch Hours",
+            "raw_feature": "Avg Monthly Watch Hours",
+            "impact": 0.7142,
+            "abs_impact": 0.7142,
+            "direction": "churn",
+            "feature_value": 31.6
+          }
+        ],
+        "c2_summary": "Subscriber OTT-000916 is at CRITICAL risk (93.5%) caused by 2 support tickets and service friction. Immediate resolution is necessary to prevent cancellation.",
+        "c2_rec": "VIP Support Escalation + 1 Month Free Basic Pass",
+        "prob_diff": 1.25
+      }
+    ],
+    "tier_samples": {
+      "CRITICAL": {
+        "customer_id": "OTT-001296",
+        "churn_probability": 0.9948,
+        "risk_level": "CRITICAL",
+        "top_drivers": [
+          {
+            "feature": "Days Since Last Login",
+            "raw_feature": "Days Since Last Login",
+            "impact": 2.4775,
+            "abs_impact": 2.4775,
+            "direction": "churn",
+            "feature_value": 38
+          },
+          {
+            "feature": "Avg Monthly Watch Hours",
+            "raw_feature": "Avg Monthly Watch Hours",
+            "impact": 2.0388,
+            "abs_impact": 2.0388,
+            "direction": "churn",
+            "feature_value": 1.0
+          },
+          {
+            "feature": "Tenure Months",
+            "raw_feature": "Tenure Months",
+            "impact": 0.8128,
+            "abs_impact": 0.8128,
+            "direction": "churn",
+            "feature_value": 10
+          },
+          {
+            "feature": "Age",
+            "raw_feature": "Age",
+            "impact": -0.3787,
+            "abs_impact": 0.3787,
+            "direction": "retention",
+            "feature_value": 31
+          }
+        ],
+        "strategy_summary": "Subscriber OTT-001296 shows a CRITICAL churn risk (99.5%) driven primarily by low viewing engagement (1.0 hrs/month) and 38 days since last login. Re-activating content consumption is the top priority.",
+        "recommendation": "Special Re-engagement: 50% Off 3-Month Upgrade + Curated VIP Watchlist"
+      },
+      "HIGH": {
+        "customer_id": "OTT-002654",
+        "churn_probability": 0.7489,
+        "risk_level": "HIGH",
+        "top_drivers": [
+          {
+            "feature": "Avg Monthly Watch Hours",
+            "raw_feature": "Avg Monthly Watch Hours",
+            "impact": 2.0013,
+            "abs_impact": 2.0013,
+            "direction": "churn",
+            "feature_value": 1.0
+          },
+          {
+            "feature": "Days Since Last Login",
+            "raw_feature": "Days Since Last Login",
+            "impact": -1.3611,
+            "abs_impact": 1.3611,
+            "direction": "retention",
+            "feature_value": 7
+          },
+          {
+            "feature": "Tenure Months",
+            "raw_feature": "Tenure Months",
+            "impact": 1.0078,
+            "abs_impact": 1.0078,
+            "direction": "churn",
+            "feature_value": 7
+          },
+          {
+            "feature": "Support Tickets",
+            "raw_feature": "Support Tickets",
+            "impact": -0.8235,
+            "abs_impact": 0.8235,
+            "direction": "retention",
+            "feature_value": 0
+          }
+        ],
+        "strategy_summary": "Subscriber OTT-002654 shows a HIGH churn risk (74.9%) driven primarily by low viewing engagement (1.0 hrs/month) and 7 days since last login. Re-activating content consumption is the top priority.",
+        "recommendation": "Special Re-engagement: 50% Off 3-Month Upgrade + Curated VIP Watchlist"
+      },
+      "MEDIUM": {
+        "customer_id": "OTT-002469",
+        "churn_probability": 0.5876,
+        "risk_level": "MEDIUM",
+        "top_drivers": [
+          {
+            "feature": "Days Since Last Login",
+            "raw_feature": "Days Since Last Login",
+            "impact": 2.5173,
+            "abs_impact": 2.5173,
+            "direction": "churn",
+            "feature_value": 34
+          },
+          {
+            "feature": "Avg Monthly Watch Hours",
+            "raw_feature": "Avg Monthly Watch Hours",
+            "impact": -1.3803,
+            "abs_impact": 1.3803,
+            "direction": "retention",
+            "feature_value": 43.2
+          },
+          {
+            "feature": "Tenure Months",
+            "raw_feature": "Tenure Months",
+            "impact": -1.2928,
+            "abs_impact": 1.2928,
+            "direction": "retention",
+            "feature_value": 45
+          },
+          {
+            "feature": "Profile Count",
+            "raw_feature": "Profile Count",
+            "impact": -0.1735,
+            "abs_impact": 0.1735,
+            "direction": "retention",
+            "feature_value": 4
+          }
+        ],
+        "strategy_summary": "Subscriber OTT-002469 maintains moderate engagement (43.2 hrs/mo, last login 34 days ago) with a 58.8% churn probability. Proactive engagement keeps retention stable.",
+        "recommendation": "Content Perks Upgrade: Free 30-Day Premium Feature Access"
+      },
+      "LOW": {
+        "customer_id": "OTT-000712",
+        "churn_probability": 0.2951,
+        "risk_level": "LOW",
+        "top_drivers": [
+          {
+            "feature": "Avg Monthly Watch Hours",
+            "raw_feature": "Avg Monthly Watch Hours",
+            "impact": 1.4606,
+            "abs_impact": 1.4606,
+            "direction": "churn",
+            "feature_value": 13.8
+          },
+          {
+            "feature": "Tenure Months",
+            "raw_feature": "Tenure Months",
+            "impact": -1.0513,
+            "abs_impact": 1.0513,
+            "direction": "retention",
+            "feature_value": 35
+          },
+          {
+            "feature": "Support Tickets",
+            "raw_feature": "Support Tickets",
+            "impact": -1.0155,
+            "abs_impact": 1.0155,
+            "direction": "retention",
+            "feature_value": 0
+          },
+          {
+            "feature": "Profile Count",
+            "raw_feature": "Profile Count",
+            "impact": -0.4655,
+            "abs_impact": 0.4655,
+            "direction": "retention",
+            "feature_value": 5
+          }
+        ],
+        "strategy_summary": "Subscriber OTT-000712 exhibits strong account health with a low churn probability of 29.5%. Active usage (13.8 watch hrs/mo, login 16 days ago) serves as a key retention anchor.",
+        "recommendation": "VIP Loyalty Recognition: Free Feature Boost & Early Premiere Pass"
+      }
+    }
+  },
+  "banking": {
+    "tested": 100,
+    "unique_summaries": 100,
+    "unique_recs": 4,
+    "avg_similarity": 0.1998,
+    "max_similarity": 0.8509,
+    "same_prob_pairs": [
+      {
+        "c1_id": "708708858",
+        "c1_prob": 0.9989,
+        "c1_risk": "CRITICAL",
+        "c1_pos_drivers": [
+          {
+            "feature": "Total Trans Ct",
+            "raw_feature": "Total_Trans_Ct",
+            "impact": 1.9116,
+            "abs_impact": 1.9116,
+            "direction": "churn",
+            "feature_value": null
+          },
+          {
+            "feature": "Total Relationship Count",
+            "raw_feature": "Total_Relationship_Count",
+            "impact": 1.5151,
+            "abs_impact": 1.5151,
+            "direction": "churn",
+            "feature_value": null
+          },
+          {
+            "feature": "Total Trans Amt",
+            "raw_feature": "Total_Trans_Amt",
+            "impact": 1.4043,
+            "abs_impact": 1.4043,
+            "direction": "churn",
+            "feature_value": null
+          }
+        ],
+        "c1_summary": "Account 708708858 is at CRITICAL risk (99.9% churn probability) following 3 months of inactivity and declining transactions (46 total). Direct relationship manager outreach is required.",
+        "c1_rec": "Personalized Card Reactivation: 5,000 Bonus Loyalty Points + 3x Cashback",
+        "c2_id": "718890933",
+        "c2_prob": 0.9959,
+        "c2_risk": "CRITICAL",
+        "c2_pos_drivers": [
+          {
+            "feature": "Total Trans Ct",
+            "raw_feature": "Total_Trans_Ct",
+            "impact": 2.0864,
+            "abs_impact": 2.0864,
+            "direction": "churn",
+            "feature_value": null
+          },
+          {
+            "feature": "Total Trans Amt",
+            "raw_feature": "Total_Trans_Amt",
+            "impact": 2.0085,
+            "abs_impact": 2.0085,
+            "direction": "churn",
+            "feature_value": null
+          },
+          {
+            "feature": "Total Revolving Bal",
+            "raw_feature": "Total_Revolving_Bal",
+            "impact": 1.0259,
+            "abs_impact": 1.0259,
+            "direction": "churn",
+            "feature_value": null
+          }
+        ],
+        "c2_summary": "Account 718890933 displays low transaction velocity (38 transactions, $2429 volume) driving a 99.6% churn probability. Re-stimulating spending habits restores retention.",
+        "c2_rec": "3x Reward Multiplier on Next 10 Everyday Purchases",
+        "prob_diff": 0.3
+      },
+      {
+        "c1_id": "718890933",
+        "c1_prob": 0.9959,
+        "c1_risk": "CRITICAL",
+        "c1_pos_drivers": [
+          {
+            "feature": "Total Trans Ct",
+            "raw_feature": "Total_Trans_Ct",
+            "impact": 2.0864,
+            "abs_impact": 2.0864,
+            "direction": "churn",
+            "feature_value": null
+          },
+          {
+            "feature": "Total Trans Amt",
+            "raw_feature": "Total_Trans_Amt",
+            "impact": 2.0085,
+            "abs_impact": 2.0085,
+            "direction": "churn",
+            "feature_value": null
+          },
+          {
+            "feature": "Total Revolving Bal",
+            "raw_feature": "Total_Revolving_Bal",
+            "impact": 1.0259,
+            "abs_impact": 1.0259,
+            "direction": "churn",
+            "feature_value": null
+          }
+        ],
+        "c1_summary": "Account 718890933 displays low transaction velocity (38 transactions, $2429 volume) driving a 99.6% churn probability. Re-stimulating spending habits restores retention.",
+        "c1_rec": "3x Reward Multiplier on Next 10 Everyday Purchases",
+        "c2_id": "713696808",
+        "c2_prob": 0.9936,
+        "c2_risk": "CRITICAL",
+        "c2_pos_drivers": [
+          {
+            "feature": "Total Trans Ct",
+            "raw_feature": "Total_Trans_Ct",
+            "impact": 1.9524,
+            "abs_impact": 1.9524,
+            "direction": "churn",
+            "feature_value": null
+          },
+          {
+            "feature": "Total Trans Amt",
+            "raw_feature": "Total_Trans_Amt",
+            "impact": 1.3635,
+            "abs_impact": 1.3635,
+            "direction": "churn",
+            "feature_value": null
+          },
+          {
+            "feature": "Total Revolving Bal",
+            "raw_feature": "Total_Revolving_Bal",
+            "impact": 0.8927,
+            "abs_impact": 0.8927,
+            "direction": "churn",
+            "feature_value": null
+          }
+        ],
+        "c2_summary": "Account 713696808 is at CRITICAL risk (99.4% churn probability) following 3 months of inactivity and declining transactions (42 total). Direct relationship manager outreach is required.",
+        "c2_rec": "Personalized Card Reactivation: 5,000 Bonus Loyalty Points + 3x Cashback",
+        "prob_diff": 0.23
+      }
+    ],
+    "tier_samples": {
+      "CRITICAL": {
+        "customer_id": "708708858",
+        "churn_probability": 0.9989,
+        "risk_level": "CRITICAL",
+        "top_drivers": [
+          {
+            "feature": "Total Trans Ct",
+            "raw_feature": "Total_Trans_Ct",
+            "impact": 1.9116,
+            "abs_impact": 1.9116,
+            "direction": "churn",
+            "feature_value": null
+          },
+          {
+            "feature": "Total Relationship Count",
+            "raw_feature": "Total_Relationship_Count",
+            "impact": 1.5151,
+            "abs_impact": 1.5151,
+            "direction": "churn",
+            "feature_value": null
+          },
+          {
+            "feature": "Total Trans Amt",
+            "raw_feature": "Total_Trans_Amt",
+            "impact": 1.4043,
+            "abs_impact": 1.4043,
+            "direction": "churn",
+            "feature_value": null
+          },
+          {
+            "feature": "Total Revolving Bal",
+            "raw_feature": "Total_Revolving_Bal",
+            "impact": 0.7616,
+            "abs_impact": 0.7616,
+            "direction": "churn",
+            "feature_value": null
+          }
+        ],
+        "strategy_summary": "Account 708708858 is at CRITICAL risk (99.9% churn probability) following 3 months of inactivity and declining transactions (46 total). Direct relationship manager outreach is required.",
+        "recommendation": "Personalized Card Reactivation: 5,000 Bonus Loyalty Points + 3x Cashback"
+      },
+      "MEDIUM": {
+        "customer_id": "713217858",
+        "churn_probability": 0.4718,
+        "risk_level": "MEDIUM",
+        "top_drivers": [
+          {
+            "feature": "Total Trans Amt",
+            "raw_feature": "Total_Trans_Amt",
+            "impact": -2.792,
+            "abs_impact": 2.792,
+            "direction": "retention",
+            "feature_value": null
+          },
+          {
+            "feature": "Total Trans Ct",
+            "raw_feature": "Total_Trans_Ct",
+            "impact": 1.2961,
+            "abs_impact": 1.2961,
+            "direction": "churn",
+            "feature_value": null
+          },
+          {
+            "feature": "Total Revolving Bal",
+            "raw_feature": "Total_Revolving_Bal",
+            "impact": 0.8613,
+            "abs_impact": 0.8613,
+            "direction": "churn",
+            "feature_value": null
+          },
+          {
+            "feature": "Total Ct Chng Q4 Q1",
+            "raw_feature": "Total_Ct_Chng_Q4_Q1",
+            "impact": 0.6875,
+            "abs_impact": 0.6875,
+            "direction": "churn",
+            "feature_value": null
+          }
+        ],
+        "strategy_summary": "Account 713217858 shows moderate activity (28 transactions, 3 inactive months) with a 47.2% churn probability. Incremental incentives strengthen account engagement.",
+        "recommendation": "Cardholder Value Boost: 2x Reward Multiplier + Fee Waiver"
+      },
+      "LOW": {
+        "customer_id": "713693958",
+        "churn_probability": 0.2755,
+        "risk_level": "LOW",
+        "top_drivers": [
+          {
+            "feature": "Total Trans Amt",
+            "raw_feature": "Total_Trans_Amt",
+            "impact": -2.8892,
+            "abs_impact": 2.8892,
+            "direction": "retention",
+            "feature_value": null
+          },
+          {
+            "feature": "Total Trans Ct",
+            "raw_feature": "Total_Trans_Ct",
+            "impact": 1.4329,
+            "abs_impact": 1.4329,
+            "direction": "churn",
+            "feature_value": null
+          },
+          {
+            "feature": "Total Relationship Count",
+            "raw_feature": "Total_Relationship_Count",
+            "impact": -1.2699,
+            "abs_impact": 1.2699,
+            "direction": "retention",
+            "feature_value": null
+          },
+          {
+            "feature": "Total Revolving Bal",
+            "raw_feature": "Total_Revolving_Bal",
+            "impact": 0.822,
+            "abs_impact": 0.822,
+            "direction": "churn",
+            "feature_value": null
+          }
+        ],
+        "strategy_summary": "Account 713693958 demonstrates excellent relationship health with a low churn probability of 27.6%, anchored by consistent account activity (29 transactions, $1295 volume).",
+        "recommendation": "Exclusive VIP Relationship Status + Premium Reward Perks"
+      }
+    }
+  }
+}
