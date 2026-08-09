@@ -297,7 +297,7 @@ async def bulk_predict(file: UploadFile = File(...), industry: str = Form("telec
     avg_prob = sanitize_float(float(probs.mean())) if len(probs) > 0 else 0.0
     analytics = compute_industry_analytics(df_raw, industry)
 
-    return {
+    return to_jsonable_deep({
         "industry": industry,
         "total_customers": len(results),
         "customers_at_risk": at_risk,
@@ -306,7 +306,7 @@ async def bulk_predict(file: UploadFile = File(...), industry: str = Form("telec
         "risk_summary": risk_summary,
         "analytics": analytics,
         "predictions": results
-    }
+    })
 
 @app.post("/simulate")
 def simulate_retention(req: RetentionSimulateRequest):
