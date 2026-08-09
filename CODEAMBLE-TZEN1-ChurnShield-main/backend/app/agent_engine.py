@@ -5,7 +5,11 @@ import shap
 from app.model_loader import get_model, get_preprocessor
 from app.recommendation_engine import get_risk_level, calculate_financial_exposure
 
-GEO_IGNORE = {"city", "zip code", "latitude", "longitude", "lat long", "lat_long"}
+GEO_IGNORE = {
+    "city", "zip code", "latitude", "longitude", "lat long", "lat_long",
+    "cltv", "total long distance charges", "avg monthly long distance charges",
+    "total charges", "total extra data charges", "total refunds"
+}
 
 
 def to_jsonable_deep(obj):
@@ -132,42 +136,41 @@ class RetentionAgentOrchestrator:
             cat_feature_names = cat_encoder.get_feature_names_out(cat_feat_cols).tolist() if cat_feat_cols else []
             feature_names    = num_feat_names + cat_feature_names
 
-            shap_df = pd.DataFrame({"feature": feature_names, "shap_value": shap_array})
-            shap_df["abs_shap"] = shap_df["shap_value"].abs()
-            shap_df = shap_df.sort_values(by="abs_shap", ascending=False)
+            # Group SHAP values by Primary Attribute Name
+            attr_shap = {}
+            for fname, val in zip(feature_names, shap_array):
+                if any(g in fname.lower() for g in GEO_IGNORE):
+                    continue
+                orig_attr, feat_val = _reverse_onehot_map(fname, customer_data)
+                # Ensure it maps to an actual primary customer attribute
+                if feat_val is None and orig_attr not in customer_data:
+                    continue
+                if orig_attr not in attr_shap:
+                    val_display = feat_val if feat_val is not None else customer_data.get(orig_attr, "N/A")
+                    attr_shap[orig_attr] = {"shap_sum": 0.0, "feat_val": val_display}
+                attr_shap[orig_attr]["shap_sum"] += float(val)
 
-            # Drop non-actionable geographic columns
-            shap_df = shap_df[~shap_df["feature"].apply(
-                lambda f: any(g in f.lower() for g in GEO_IGNORE)
-            )]
-
-            top_n   = shap_df.head(10)
-            # FIX #5 — Relative Importance %
-            total_abs = top_n["abs_shap"].sum()
-
-            for _, row in top_n.iterrows():
-                feat      = row["feature"]
-                shap_val  = round(float(row["shap_value"]), 4)
-                abs_shap  = round(float(row["abs_shap"]), 4)
-
-                # FIX #2 — Accurate feature name + raw value mapping
-                original_attr, feat_val = _reverse_onehot_map(feat, customer_data)
-
-                # FIX #1 — Direction determined ONLY by SHAP sign (never by "direction" string)
-                direction = "churn" if shap_val > 0 else "retention"
-
-                # FIX #5 — Importance percentage
-                importance_pct = round((abs_shap / total_abs) * 100, 1) if total_abs > 0 else 0.0
-
-                top_shap_features.append({
-                    "feature":       original_attr,   # human-readable original attribute
-                    "raw_feature":   feat,            # raw model feature name (for debugging)
-                    "impact":        shap_val,
-                    "abs_impact":    abs_shap,
-                    "direction":     direction,       # FIX #1: strictly sign-based
-                    "feature_value": feat_val,        # FIX #2: actual raw customer value
-                    "importance":    importance_pct   # FIX #5: relative importance %
+            top_list = []
+            for attr, data in attr_shap.items():
+                s_val = round(data["shap_sum"], 4)
+                abs_s = abs(s_val)
+                top_list.append({
+                    "feature":       attr,
+                    "raw_feature":   attr,
+                    "impact":        s_val,
+                    "abs_impact":    round(abs_s, 4),
+                    "direction":     "churn" if s_val > 0 else "retention",
+                    "feature_value": data["feat_val"]
                 })
+
+            top_list.sort(key=lambda x: x["abs_impact"], reverse=True)
+            top_n = top_list[:8]
+            total_abs = sum(x["abs_impact"] for x in top_n)
+
+            for item in top_n:
+                item["importance"] = round((item["abs_impact"] / total_abs) * 100, 1) if total_abs > 0 else 0.0
+
+            top_shap_features = top_n
 
         except Exception as shap_err:
             print(f"[SHAP] Warning: SHAP computation failed — {shap_err}")

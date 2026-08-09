@@ -161,7 +161,7 @@ export default function App() {
   const [commResult, setCommResult] = useState(null);
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [riskFilter, setRiskFilter] = useState("ALL");
+  const [riskFilter, setRiskFilter] = useState("CUSTOMER_ID");
   const [sortBy, setSortBy] = useState("churn_probability");
   const shuffleSeedRef = useRef(Math.random());
   const [currentPage, setCurrentPage] = useState(1);
@@ -182,7 +182,7 @@ export default function App() {
     setForm(DOMAIN_DEFAULTS[ind] || {});
     setSelectedCustomer(null); setStrategyResult(null);
     setCommResult(null); setSearchQuery("");
-    setRiskFilter("ALL"); setCurrentPage(1);
+    setRiskFilter("CUSTOMER_ID"); setCurrentPage(1);
     const existingResult = allBulkResults[ind];
     navigate(existingResult ? "dashboard" : "input");
   };
@@ -229,7 +229,7 @@ export default function App() {
     try {
       const res = await axios.post("http://localhost:8000/bulk_predict", formData, { headers: { "Content-Type": "multipart/form-data" } });
       setAllBulkResults((p) => ({ ...p, [industry]: res.data }));
-      setSearchQuery(""); setRiskFilter("ALL"); setCurrentPage(1);
+      setSearchQuery(""); setRiskFilter("CUSTOMER_ID"); setCurrentPage(1);
       setUploadStatus("success"); navigate("dashboard");
     } catch (err) { setUploadStatus("error"); alert("Bulk prediction failed: " + (err.response?.data?.detail || err.message)); }
     setLoading(false);
@@ -251,8 +251,15 @@ export default function App() {
     setLoading(false);
   };
 
-  const generateComm = async () => {
+  const generateComm = async (overrideChannel, overrideTone) => {
     const activeCust = selectedCustomer; if (!activeCust) return;
+    const ch = (typeof overrideChannel === "string") ? overrideChannel : commChannel;
+    const t = (typeof overrideTone === "string") ? overrideTone : commTone;
+    // Sanitize profile — only plain primitive key/value pairs to avoid circular JSON
+    const rawProfile = activeCust.profile || {};
+    const safeProfile = Object.fromEntries(
+      Object.entries(rawProfile).filter(([, v]) => v === null || ["string","number","boolean"].includes(typeof v))
+    );
     setLoading(true);
     try {
       const res = await axios.post("http://localhost:8000/communication/generate", {
@@ -260,7 +267,7 @@ export default function App() {
         risk_level: activeCust.risk_level, churn_probability: activeCust.churn_probability,
         top_drivers: activeCust.top_drivers || activeCust.top_churn_drivers || [],
         recommendation: strategyResult?.recommendation || "Targeted retention engagement offer",
-        channel: commChannel, tone: commTone, profile: activeCust.profile || activeCust
+        channel: ch, tone: t, profile: safeProfile
       });
       setCommResult(res.data);
     } catch (err) { alert("Communication generation failed: " + (err.response?.data?.detail || err.message)); }
@@ -288,13 +295,32 @@ export default function App() {
 
   /* Filtered + Paginated Customers */
   const filteredCustomers = useMemo(() => {
-    if (!bulkResult) return [];
+    if (!bulkResult || !bulkResult.predictions) return [];
     let list = [...bulkResult.predictions];
-    if (riskFilter !== "ALL") list = list.filter((c) => c.risk_level === riskFilter);
-    if (searchQuery.trim()) list = list.filter((c) => c.customer_id.toLowerCase().includes(searchQuery.toLowerCase()));
-    if (sortBy === "churn_probability") list.sort((a, b) => b.churn_probability - a.churn_probability);
-    else if (sortBy === "exposure") list.sort((a, b) => (b.financial_exposure?.risk_revenue_loss ?? 0) - (a.financial_exposure?.risk_revenue_loss ?? 0));
-    else if (sortBy === "customer_id") list.sort((a, b) => a.customer_id.localeCompare(b.customer_id));
+
+    if (riskFilter === "CUSTOMER_ID") {
+      list.sort((a, b) =>
+        String(a.customer_id || "").localeCompare(String(b.customer_id || ""), undefined, { numeric: true, sensitivity: "base" })
+      );
+    } else if (riskFilter !== "ALL") {
+      list = list.filter((c) => c.risk_level === riskFilter);
+    }
+
+    if (searchQuery.trim()) {
+      list = list.filter((c) =>
+        String(c.customer_id || "").toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    if (sortBy === "churn_probability" && riskFilter !== "CUSTOMER_ID") {
+      list.sort((a, b) => (b.churn_probability || 0) - (a.churn_probability || 0));
+    } else if (sortBy === "exposure") {
+      list.sort((a, b) => (b.financial_exposure?.risk_revenue_loss ?? 0) - (a.financial_exposure?.risk_revenue_loss ?? 0));
+    } else if (sortBy === "customer_id" && riskFilter !== "CUSTOMER_ID") {
+      list.sort((a, b) =>
+        String(a.customer_id || "").localeCompare(String(b.customer_id || ""), undefined, { numeric: true, sensitivity: "base" })
+      );
+    }
     return list;
   }, [bulkResult, riskFilter, searchQuery, sortBy]);
 
@@ -366,7 +392,7 @@ export default function App() {
       )}
 
       {/* ── MAIN ── */}
-      <main style={{ position: "relative", zIndex: 1, maxWidth: page === "industry" ? "none" : 1200, margin: "0 auto", padding: page === "industry" ? 0 : "32px 24px 48px" }}>
+      <main className={page === "industry" ? "" : "cs-main-padding"} style={{ position: "relative", zIndex: 1, maxWidth: page === "industry" ? "none" : 1200, margin: "0 auto" }}>
 
         {/* ══════════════════════════════
             PAGE 1 — LANDING (FULL SCREEN)
@@ -636,15 +662,11 @@ export default function App() {
                     <div className="cs-icon-box-sm"><UserRound size={16} /></div>
                     <h3 style={{ fontSize: 17, fontWeight: 700, color: "#111827" }}>Manual Customer Input</h3>
                   </div>
-                  <button
-                    onClick={() => setForm(DOMAIN_DEFAULTS[industry] || {})}
-                    style={{ fontSize: 12, color: "var(--primary)", background: "none", border: "none", cursor: "pointer", fontWeight: 500 }}
-                  >Clear Form</button>
                 </div>
 
-                {/* Form fields — 2 column grid */}
+                {/* Form fields — responsive grid */}
                 <div style={{ flex: 1, overflowY: "auto", maxHeight: 380 }}>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                  <div className="cs-form-grid">
                     {DOMAIN_FIELDS[industry].slice(0, 8).map((field) => (
                       <div key={field.key}>
                         <label style={{ fontSize: 11.5, color: "var(--text-secondary)", fontWeight: 500, display: "block", marginBottom: 5 }}>
@@ -675,14 +697,11 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Footer buttons */}
-                <div style={{ display: "flex", gap: 12, marginTop: 24 }}>
-                  <button className="cs-btn-secondary" style={{ flex: 1, justifyContent: "center" }}>
-                    Save as Draft
-                  </button>
+                {/* Footer button */}
+                <div style={{ marginTop: 24 }}>
                   <button
                     className="cs-btn-primary"
-                    style={{ flex: 2, justifyContent: "center", padding: "12px 24px", borderRadius: 10 }}
+                    style={{ width: "100%", justifyContent: "center", padding: "12px 24px", borderRadius: 10 }}
                     onClick={predictManual}
                     disabled={loading}
                   >
@@ -841,21 +860,20 @@ export default function App() {
                           onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
                         />
                       </div>
-                      {/* Filter */}
-                      <div style={{ display: "flex", background: "#F9FAFB", border: "1px solid var(--border)", borderRadius: 8, overflow: "hidden" }}>
-                        {["ALL", "CRITICAL", "HIGH", "MEDIUM", "LOW"].map((level) => (
-                          <button
-                            key={level}
-                            onClick={() => { setRiskFilter(level); setCurrentPage(1); }}
-                            style={{
-                              padding: "6px 12px", fontSize: 11, fontWeight: 600, border: "none", cursor: "pointer",
-                              background: riskFilter === level ? "var(--primary)" : "transparent",
-                              color: riskFilter === level ? "#fff" : "var(--text-secondary)",
-                              transition: "all 0.15s"
-                            }}
-                          >{level}</button>
-                        ))}
-                      </div>
+                      {/* Filter Dropdown */}
+                      <select
+                        className="cs-select"
+                        style={{ fontSize: 12, padding: "6px 28px 6px 12px", height: 36, minWidth: 200 }}
+                        value={riskFilter}
+                        onChange={(e) => { setRiskFilter(e.target.value); setCurrentPage(1); }}
+                      >
+                        <option value="CUSTOMER_ID">Sort by Customer ID (Default)</option>
+                        <option value="ALL">All Risk Levels</option>
+                        <option value="CRITICAL">Critical Risk</option>
+                        <option value="HIGH">High Risk</option>
+                        <option value="MEDIUM">Medium Risk</option>
+                        <option value="LOW">Low Risk</option>
+                      </select>
                     </div>
                   </div>
 
@@ -1000,15 +1018,15 @@ export default function App() {
 
                     <div style={{ marginBottom: 16 }}>
                       <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 12 }}>DOMAIN METRICS</div>
-                      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                        {Object.entries(selectedCustomer.profile || {}).slice(0, 6).map(([k, v]) => (
-                          v !== null && v !== undefined && (
-                            <div key={k} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                                <FileText size={12} color="var(--text-muted)" />
-                                <span style={{ fontSize: 12.5, color: "var(--text-secondary)" }}>{k.replace(/_/g, " ")}</span>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 10, maxHeight: 340, overflowY: "auto", paddingRight: 4 }}>
+                        {Object.entries(selectedCustomer.profile || {}).map(([k, v]) => (
+                          v !== null && v !== undefined && String(v).trim() !== "" && (
+                            <div key={k} style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
+                              <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0, maxWidth: "55%" }}>
+                                <FileText size={12} color="var(--text-muted)" style={{ flexShrink: 0 }} />
+                                <span style={{ fontSize: 12, color: "var(--text-secondary)", wordBreak: "break-word" }}>{k.replace(/_/g, " ")}</span>
                               </div>
-                              <span style={{ fontSize: 12.5, fontWeight: 600, color: "#111827" }}>{String(v)}</span>
+                              <span style={{ fontSize: 12, fontWeight: 600, color: "#111827", textAlign: "right", wordBreak: "break-word" }}>{String(v)}</span>
                             </div>
                           )
                         ))}
@@ -1117,7 +1135,6 @@ export default function App() {
                   </div>
                 </div>
                 <div style={{ display: "flex", gap: 12 }}>
-                  <button className="cs-btn-secondary" style={{ fontSize: 13 }}>Log Activity</button>
                   <button
                     className="cs-btn-primary"
                     style={{ fontSize: 13, padding: "10px 24px", borderRadius: 10 }}
@@ -1373,69 +1390,109 @@ export default function App() {
                   </div>
 
                   {/* Right: Customer Communication */}
-                  <div className="cs-card" style={{ padding: 24, display: "flex", flexDirection: "column" }}>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                        <Mail size={16} color="var(--primary)" />
-                        <h3 style={{ fontSize: 16, fontWeight: 700, color: "#111827" }}>Customer Communication</h3>
+                  <div className="cs-card" style={{ padding: 24, display: "flex", flexDirection: "column", justifyContent: "space-between", gap: 16 }}>
+                    <div>
+                      {/* Card Header */}
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                          <div style={{ width: 34, height: 34, borderRadius: 8, background: "#EEF2FF", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <Mail size={16} color="var(--primary)" />
+                          </div>
+                          <div>
+                            <h3 style={{ fontSize: 16, fontWeight: 700, color: "#111827", margin: 0 }}>Customer Communication</h3>
+                            <p style={{ fontSize: 11, color: "var(--text-secondary)", margin: 0 }}>Personalized retention message generator</p>
+                          </div>
+                        </div>
+                        <button className="cs-btn-ghost" style={{ padding: "6px 10px" }} onClick={generateComm} title="Regenerate message">
+                          <RefreshCw size={14} className={loading ? "spin-slow" : ""} />
+                        </button>
                       </div>
-                      <button className="cs-btn-ghost" style={{ padding: "4px 8px" }} onClick={generateComm} title="Regenerate message">
-                        <RefreshCw size={14} />
-                      </button>
-                    </div>
 
-                    {/* Channel tabs */}
-                    <div style={{ display: "flex", gap: 6, marginBottom: 16 }}>
-                      {["email", "sms", "whatsapp", "call_script"].map((ch) => (
-                        <button
-                          key={ch}
-                          onClick={() => setCommChannel(ch)}
-                          style={{
-                            padding: "5px 12px", fontSize: 11, fontWeight: 600, borderRadius: 6, border: "none",
-                            cursor: "pointer", background: commChannel === ch ? "var(--primary)" : "#F3F4F6",
-                            color: commChannel === ch ? "#fff" : "var(--text-secondary)", transition: "all 0.15s",
-                            textTransform: "capitalize"
-                          }}
-                        >{ch.replace("_", " ")}</button>
-                      ))}
-                    </div>
-
-                    {/* Subject line */}
-                    <div style={{ marginBottom: 14 }}>
-                      <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--text-muted)", display: "block", marginBottom: 6 }}>
-                        SUBJECT LINE
-                      </label>
-                      <input
-                        className="cs-input"
-                        value={commResult?.subject || `Checking in on your ChurnShield ${currentMeta.label} account`}
-                        onChange={(e) => setCommResult((p) => ({ ...p, subject: e.target.value }))}
-                        style={{ fontSize: 13 }}
-                      />
-                    </div>
-
-                    {/* Body */}
-                    <div style={{ flex: 1 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-                        <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--text-muted)" }}>
-                          MESSAGE COPY
+                      {/* Channel tabs */}
+                      <div style={{ marginBottom: 14 }}>
+                        <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--text-muted)", display: "block", marginBottom: 6 }}>
+                          COMMUNICATION CHANNEL
                         </label>
-                        {commResult && (
-                          <span style={{ fontSize: 10, background: "#EEF2FF", color: "var(--primary)", padding: "2px 8px", borderRadius: 20, fontWeight: 600 }}>AI Generated</span>
-                        )}
+                        <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                          {["email", "sms", "whatsapp", "call_script"].map((ch) => (
+                            <button
+                              key={ch}
+                              onClick={() => { setCommChannel(ch); generateComm(ch, commTone); }}
+                              style={{
+                                padding: "5px 12px", fontSize: 11, fontWeight: 600, borderRadius: 6, border: "none",
+                                cursor: "pointer", background: commChannel === ch ? "var(--primary)" : "#F3F4F6",
+                                color: commChannel === ch ? "#fff" : "var(--text-secondary)", transition: "all 0.15s",
+                                textTransform: "capitalize"
+                              }}
+                            >{ch.replace("_", " ")}</button>
+                          ))}
+                        </div>
                       </div>
-                      <textarea
-                        rows={10}
-                        className="cs-input"
-                        style={{ resize: "none", lineHeight: 1.7, fontSize: 13 }}
-                        value={commResult?.body || commResult?.content || `Hi [Contact Name],\n\nI noticed your account activity has dipped recently, and I wanted to personally reach out to ensure you are getting the most out of your ${currentMeta.label} plan.\n\nTo help align our service with your needs, we would like to offer you a custom account review and 15% discount for the next 3 months.\n\nWould you be open to a brief 5-minute chat this week to discuss this offer?\n\nBest regards,\nCustomer Success Team`}
-                        onChange={(e) => setCommResult((p) => ({ ...p, body: e.target.value, content: e.target.value }))}
-                      />
+
+
+
+                      {/* Subject line */}
+                      <div style={{ marginBottom: 14 }}>
+                        <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--text-muted)", display: "block", marginBottom: 6 }}>
+                          SUBJECT LINE
+                        </label>
+                        <input
+                          className="cs-input"
+                          value={commResult?.subject || `Exclusive Offer: Special Support & Savings for Your ${currentMeta.label} Account`}
+                          onChange={(e) => setCommResult((p) => ({ ...p, subject: e.target.value }))}
+                          style={{ fontSize: 13 }}
+                        />
+                      </div>
+
+                      {/* Body */}
+                      <div style={{ marginBottom: 14 }}>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
+                          <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--text-muted)" }}>
+                            MESSAGE COPY
+                          </label>
+                          <span style={{ fontSize: 10, background: "#EEF2FF", color: "var(--primary)", padding: "2px 8px", borderRadius: 20, fontWeight: 600 }}>
+                            AI Generated
+                          </span>
+                        </div>
+                        <textarea
+                          rows={12}
+                          className="cs-input"
+                          style={{ resize: "none", lineHeight: 1.7, fontSize: 13, minHeight: 220 }}
+                          value={commResult?.body || commResult?.content || `Hi [Contact Name],\n\nI noticed your account activity has dipped recently, and I wanted to personally reach out to ensure you are getting the most out of your ${currentMeta.label} plan.\n\nTo help align our service with your needs, we would like to offer you a custom account review and 15% discount for the next 3 months.\n\nWould you be open to a brief 5-minute chat this week to discuss this offer?\n\nBest regards,\nCustomer Success Team`}
+                          onChange={(e) => setCommResult((p) => ({ ...p, body: e.target.value, content: e.target.value }))}
+                        />
+                      </div>
+
+                      {/* Predicted Impact Box */}
+                      <div style={{ background: "#FAFAFE", border: "1px solid #E5E7EB", borderRadius: 10, padding: 14 }}>
+                        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 8 }}>
+                          PREDICTED RETENTION IMPACT
+                        </div>
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, textAlign: "center" }}>
+                          <div style={{ background: "#fff", padding: "8px 6px", borderRadius: 6, border: "1px solid var(--border-light)" }}>
+                            <div style={{ fontSize: 10, color: "var(--text-secondary)" }}>Prev. Churn</div>
+                            <div style={{ fontSize: 15, fontWeight: 800, color: "#EF4444" }}>
+                              {Math.round((selectedCustomer?.churn_probability || 0.65) * 100)}%
+                            </div>
+                          </div>
+                          <div style={{ background: "#fff", padding: "8px 6px", borderRadius: 6, border: "1px solid var(--border-light)" }}>
+                            <div style={{ fontSize: 10, color: "var(--text-secondary)" }}>Est. Churn</div>
+                            <div style={{ fontSize: 15, fontWeight: 800, color: "#10B981" }}>
+                              {Math.max(5, Math.round((selectedCustomer?.churn_probability || 0.65) * 100 - 45))}%
+                            </div>
+                          </div>
+                          <div style={{ background: "#fff", padding: "8px 6px", borderRadius: 6, border: "1px solid var(--border-light)" }}>
+                            <div style={{ fontSize: 10, color: "var(--text-secondary)" }}>Improvement</div>
+                            <div style={{ fontSize: 15, fontWeight: 800, color: "#10B981" }}>-45% ↓</div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
 
-                    {/* Footer buttons: Replace Send Email with Copy */}
-                    <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
+                    {/* Footer buttons */}
+                    <div style={{ display: "flex", gap: 10, marginTop: 12 }}>
                       <button className="cs-btn-secondary" style={{ flex: 1, justifyContent: "center" }} onClick={generateComm} disabled={loading}>
-                        <RefreshCw size={14} className={loading ? "spin-slow" : ""} /> AI Draft
+                        <RefreshCw size={14} className={loading ? "spin-slow" : ""} /> AI Regenerate
                       </button>
                       <button
                         className="cs-btn-primary"

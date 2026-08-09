@@ -636,27 +636,100 @@ Return ONLY valid JSON:
         except Exception as e:
             logging.warning(f"[Communication] JSON parse error: {e}")
 
-    # Static fallback message
-    offer = recommendation or "an exclusive loyalty offer"
-    if channel == "sms":
-        content = f"Hi {customer_id}! We have an exclusive offer for you: {offer[:70]}. Reply YES to claim. T&Cs apply."
+    # Dynamic Fallback Message Matrix for all Channel x Tone combinations
+    offer = recommendation or f"15% Discount on your {industry.title()} plan"
+    tone_clean = (tone or "professional").lower()
+    chan_clean = (channel or "email").lower()
+
+    if chan_clean == "sms":
+        subject = f"SMS ({tone_clean.title()})"
+        if tone_clean == "empathetic":
+            content = f"Hi {customer_id}, we care about your experience! Special offer: {offer[:65]}. Reply YES so we can assist. T&Cs apply."
+        elif tone_clean == "urgent":
+            content = f"URGENT for {customer_id}: Claim your {offer[:60]} before it expires! Reply YES now to secure your account savings."
+        elif tone_clean == "incentive":
+            content = f"VIP REWARD for {customer_id}! You have unlocked: {offer[:65]}. Reply YES to redeem your benefit immediately!"
+        else: # professional
+            content = f"Ref {customer_id}: Approved {industry.title()} offer available: {offer[:65]}. Reply YES to claim."
         if len(content) > 160:
             content = content[:157] + "..."
-        subject = "SMS Notification"
-    elif channel == "whatsapp":
-        content = (f"Hello! 👋\n\nWe value your {industry.title()} relationship.\n\n"
-                   f"✨ *Exclusive Offer Reserved for You:*\n👉 *{offer}*\n\nReply *YES* to activate now!")
-        subject = "WhatsApp Outreach"
-    elif channel == "call_script":
-        content = (f"[OBJECTIVE] Retain Customer {customer_id}\n"
-                   f"[OPENING] Hello, I'm calling from the {industry.title()} retention team regarding your account...\n"
-                   f"[VALUE PITCH] We've pre-approved an exclusive offer: {offer}.\n"
-                   f"[CLOSE] Can we apply this to your account today?")
-        subject = "Call Script"
-    else:
-        subject = f"Exclusive Offer for Account {customer_id}"
-        content = (f"Dear Customer {customer_id},\n\nThank you for being a valued customer. "
-                   f"We have pre-approved an exclusive offer for you:\n\n{offer}\n\n"
-                   f"Please reply to this email to claim your offer.\n\nBest regards,\nRetention Team")
+
+    elif chan_clean == "whatsapp":
+        subject = f"WhatsApp ({tone_clean.title()})"
+        if tone_clean == "empathetic":
+            content = (f"Hello! 👋 We value your relationship with us.\n\n"
+                       f"We noticed your account profile and want to make sure you're getting full value:\n"
+                       f"👉 *{offer}*\n\n"
+                       f"We're here to help anytime! Reply *YES* to activate.")
+        elif tone_clean == "urgent":
+            content = (f"⚡ *LIMITED TIME NOTICE for {customer_id}!*\n\n"
+                       f"Your exclusive retention reward expires soon:\n"
+                       f"👉 *{offer}*\n\n"
+                       f"Reply *YES* right now to lock in this special rate!")
+        elif tone_clean == "incentive":
+            content = (f"🎉 *CONGRATULATIONS {customer_id}!*\n\n"
+                       f"You've unlocked an exclusive VIP reward tier:\n"
+                       f"👉 *{offer}*\n\n"
+                       f"Reply *CLAIM* to redeem your special benefits!")
+        else: # professional
+            content = (f"Dear Customer {customer_id},\n\n"
+                       f"We have updated your account profile with a dedicated offer:\n"
+                       f"👉 *{offer}*\n\n"
+                       f"Please reply *YES* to activate this offer on your account.")
+
+    elif chan_clean == "call_script":
+        subject = f"Call Script ({tone_clean.title()})"
+        if tone_clean == "empathetic":
+            content = (f"[OBJECTIVE] Empathetic Retention Call for {customer_id}\n"
+                       f"[OPENING] Hello, I'm calling from Customer Success. We noticed recent changes on your account and want to check how you're doing...\n"
+                       f"[VALUE PITCH] We genuinely value your business and want to make things right with an offer: {offer}.\n"
+                       f"[CLOSE] How does that sound for your account?")
+        elif tone_clean == "urgent":
+            content = (f"[OBJECTIVE] Urgent Account Renewal for {customer_id}\n"
+                       f"[OPENING] Hello, I'm calling regarding a time-sensitive update on your account {customer_id}.\n"
+                       f"[VALUE PITCH] Your pre-approved retention offer expires shortly: {offer}.\n"
+                       f"[CLOSE] Can I lock this rate in for you right now?")
+        elif tone_clean == "incentive":
+            content = (f"[OBJECTIVE] VIP Reward Call for {customer_id}\n"
+                       f"[OPENING] Good day! I'm calling to share some great news about your VIP status with {industry.title()}.\n"
+                       f"[VALUE PITCH] You've unlocked an exclusive benefit: {offer}.\n"
+                       f"[CLOSE] Shall I apply this reward to your profile right now?")
+        else: # professional
+            content = (f"[OBJECTIVE] Account Review Call for {customer_id}\n"
+                       f"[OPENING] Hello, I am calling from the {industry.title()} retention team regarding account {customer_id}.\n"
+                       f"[VALUE PITCH] We have pre-approved an account adjustment: {offer}.\n"
+                       f"[CLOSE] May I proceed with updating your account?")
+
+    else: # email
+        if tone_clean == "empathetic":
+            subject = f"We Care About Your Experience — Special Support for Account {customer_id}"
+            content = (f"Dear Customer {customer_id},\n\n"
+                       f"We noticed that your recent usage or satisfaction indicators have shifted, and we want to make sure you're getting the care and value you deserve.\n\n"
+                       f"To help align our service with your needs, we have prepared a special offer for your account:\n\n"
+                       f"• {offer}\n\n"
+                       f"Your peace of mind is our priority. Please reply to this email or reach out to our dedicated support team to activate this offer.\n\n"
+                       f"Warm regards,\nCustomer Success Team")
+        elif tone_clean == "urgent":
+            subject = f"URGENT: Limited-Time Retention Offer for Account {customer_id}"
+            content = (f"Dear Customer {customer_id},\n\n"
+                       f"This is a time-sensitive notice regarding your {industry.title()} account. Your pre-approved retention rate adjustment is available for a limited time.\n\n"
+                       f"Action Required — Special Offer Available Now:\n\n"
+                       f"• {offer}\n\n"
+                       f"Please confirm acceptance by replying to this email today before this offer expires.\n\n"
+                       f"Sincerely,\nRetention Operations")
+        elif tone_clean == "incentive":
+            subject = f"VIP Reward Unlocked for Account {customer_id}"
+            content = (f"Dear Customer {customer_id},\n\n"
+                       f"Thank you for being a valued customer! In recognition of your account relationship, we have unlocked an exclusive reward for your profile:\n\n"
+                       f"• {offer}\n\n"
+                       f"You can claim this reward immediately by replying to this message.\n\n"
+                       f"Best regards,\nVIP Loyalty Team")
+        else: # professional
+            subject = f"Exclusive Retention Offer for Account {customer_id}"
+            content = (f"Dear Customer {customer_id},\n\n"
+                       f"Thank you for being a valued customer. We have pre-approved an exclusive account adjustment for you:\n\n"
+                       f"• {offer}\n\n"
+                       f"Please reply to this email to claim your offer.\n\n"
+                       f"Best regards,\nRetention Team")
 
     return {"channel": channel, "tone": tone, "subject": subject, "content": content, "body": content}

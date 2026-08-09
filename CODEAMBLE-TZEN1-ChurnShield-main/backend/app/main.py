@@ -234,53 +234,70 @@ async def bulk_predict(file: UploadFile = File(...), industry: str = Form("telec
         primary_loss = exposure.get("risk_revenue_loss", exposure.get("transaction_volume_at_risk", 0.0))
         total_exposure += primary_loss
 
+        # Build profile from ACTUAL columns present in the uploaded CSV (not hardcoded list)
+        SKIP_PROFILE = {
+            "customer id", "clientnum", "churn", "attrition_flag", "customer status",
+            "churn category", "churn reason", "lat long", "churn score",
+            "unnamed", "city", "zip code", "latitude", "longitude"
+        }
         profile = {}
-        for field in profile_fields:
-            if field in cust_row:
-                profile[field] = to_jsonable(cust_row[field])
+        for col, val in cust_row.items():
+            col_lower = str(col).lower().strip()
+            if any(s in col_lower for s in SKIP_PROFILE):
+                continue
+            serialized = to_jsonable(val)
+            if serialized is not None:
+                profile[col] = serialized
 
-        GEO_IGNORE = {"city", "zip code", "latitude", "longitude", "lat long", "lat_long"}
+        GEO_IGNORE = {
+            "city", "zip code", "latitude", "longitude", "lat long", "lat_long",
+            "cltv", "total long distance charges", "avg monthly long distance charges",
+            "total charges", "total extra data charges", "total refunds"
+        }
         shap_drivers = []
         if shap_matrix is not None and feature_names is not None:
             try:
                 row_vals = shap_matrix[i]
                 if hasattr(row_vals, "flatten"):
                     row_vals = row_vals.flatten()
-                abs_vals = np.abs(row_vals)
-                idx_sorted = np.argsort(-abs_vals)  # sort by abs descending
 
-                # Collect top 10 non-geo features first, then compute relative importance
-                top_entries = []
-                for j in idx_sorted:
-                    fname = feature_names[j]
+                # Normalize CSV column names for lookup
+                csv_cols_lower = {str(c).lower().strip() for c in cust_row.keys()}
+                attr_shap = {}
+                for fname, val in zip(feature_names, row_vals):
                     if any(g in fname.lower() for g in GEO_IGNORE):
                         continue
-                    shap_val = sanitize_float(row_vals[j])
-                    abs_shap = abs(shap_val)
+                    orig_attr, feat_val = _reverse_onehot_map(fname, cust_row)
+                    # Only include if the original attribute is actually present in the CSV
+                    attr_lower = orig_attr.lower().strip()
+                    if feat_val is None and attr_lower not in csv_cols_lower:
+                        continue
+                    if orig_attr not in attr_shap:
+                        val_display = feat_val if feat_val is not None else cust_row.get(orig_attr, "N/A")
+                        attr_shap[orig_attr] = {"shap_sum": 0.0, "feat_val": val_display}
+                    attr_shap[orig_attr]["shap_sum"] += float(val)
 
-                    # FIX #2 — accurate one-hot reverse mapping
-                    original_attr, feat_val = _reverse_onehot_map(fname, cust_row)
-
-                    top_entries.append({
-                        "feature":       original_attr,
-                        "raw_feature":   fname,
-                        "impact":        shap_val,
-                        "abs_impact":    round(abs_shap, 4),
-                        # FIX #1 — direction determined ONLY by SHAP sign
-                        "direction":     "churn" if shap_val > 0 else "retention",
-                        "feature_value": feat_val
+                top_list = []
+                for attr, data in attr_shap.items():
+                    s_val = sanitize_float(data["shap_sum"])
+                    abs_s = abs(s_val)
+                    top_list.append({
+                        "feature":       attr,
+                        "raw_feature":   attr,
+                        "impact":        s_val,
+                        "abs_impact":    round(abs_s, 4),
+                        "direction":     "churn" if s_val > 0 else "retention",
+                        "feature_value": data["feat_val"]
                     })
-                    if len(top_entries) >= 10:
-                        break
 
-                # FIX #5 — compute relative importance % across top-N
-                total_abs = sum(e["abs_impact"] for e in top_entries)
-                for entry in top_entries:
-                    entry["importance"] = round(
-                        (entry["abs_impact"] / total_abs) * 100, 1
-                    ) if total_abs > 0 else 0.0
+                top_list.sort(key=lambda x: x["abs_impact"], reverse=True)
+                top_n = top_list[:8]
+                total_abs = sum(x["abs_impact"] for x in top_n)
 
-                shap_drivers = top_entries
+                for item in top_n:
+                    item["importance"] = round((item["abs_impact"] / total_abs) * 100, 1) if total_abs > 0 else 0.0
+
+                shap_drivers = top_n
             except Exception:
                 shap_drivers = []
 
